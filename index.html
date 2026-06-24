@@ -3,22 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>生成AIポートフォリオ — 画像制作サンプル</title>
+<title>生成AIポートフォリオ — AI漫画・キャラクター・SNS画像制作</title>
 <style>
-  :root { --bg:#0f1115; --card:#1a1d24; --fg:#e8eaed; --sub:#9aa0aa; --accent:#7c9eff; --line:#2a2e37; }
+  :root { --bg:#0f1115; --card:#1a1d24; --fg:#e8eaed; --sub:#9aa0aa; --accent:#7c9eff; --gold:#ffce6b; --line:#2a2e37; }
   * { box-sizing: border-box; }
-  body { margin:0; background:var(--bg); color:var(--fg); font-family:"Segoe UI","Hiragino Kaku Gothic ProN","Meiryo",sans-serif; line-height:1.6; }
-  header { padding:48px 24px 24px; text-align:center; border-bottom:1px solid var(--line); }
-  header h1 { margin:0 0 8px; font-size:28px; }
+  body { margin:0; background:var(--bg); color:var(--fg); font-family:"Segoe UI","Hiragino Kaku Gothic ProN","Meiryo",sans-serif; line-height:1.7; }
+  header { padding:52px 24px 28px; text-align:center; border-bottom:1px solid var(--line); }
+  header h1 { margin:0 0 10px; font-size:30px; }
   header p { margin:4px 0; color:var(--sub); font-size:14px; }
-  .pitch { max-width:880px; margin:24px auto 0; text-align:left; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px 22px; }
+  .pitch { max-width:920px; margin:24px auto 0; text-align:left; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px 22px; }
   .pitch ul { margin:8px 0 0; padding-left:20px; }
-  .pitch li { margin:4px 0; color:var(--fg); font-size:14px; }
+  .pitch li { margin:5px 0; color:var(--fg); font-size:14px; }
+  .pitch b { color:var(--gold); }
   main { max-width:1200px; margin:0 auto; padding:24px; }
-  section { margin:36px 0; }
-  section h2 { font-size:20px; border-left:4px solid var(--accent); padding-left:12px; }
+  section { margin:46px 0; }
+  section h2 { font-size:21px; border-left:4px solid var(--accent); padding-left:12px; }
+  section h2 .badge { font-size:12px; color:#0f1115; background:var(--gold); border-radius:6px; padding:2px 8px; margin-left:10px; vertical-align:middle; }
   section .note { color:var(--sub); font-size:13px; margin:4px 0 18px; }
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:18px; }
+  /* feature (large) layout */
+  .feature { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:22px; }
+  .fcard { background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden; }
+  .fcard img { width:100%; display:block; background:#222; }
+  .fcard .meta { padding:16px 18px; }
+  .fcard .meta h3 { margin:0 0 6px; font-size:16px; }
+  .fcard .meta p { margin:0; font-size:13px; color:var(--sub); }
+  .fcard .meta .pipe { margin-top:10px; font-size:12px; color:var(--accent); }
+  /* grid (samples) */
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:18px; }
   .card { background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; transition:transform .15s ease, border-color .15s ease; }
   .card:hover { transform:translateY(-3px); border-color:var(--accent); }
   .card img { width:100%; display:block; background:#222; aspect-ratio:1/1; object-fit:cover; }
@@ -26,19 +37,21 @@
   .card .meta h3 { margin:0 0 4px; font-size:15px; }
   .card .meta p { margin:0; font-size:12px; color:var(--sub); }
   .tag { display:inline-block; font-size:11px; color:var(--accent); border:1px solid var(--accent); border-radius:6px; padding:1px 7px; margin-top:6px; }
-  footer { text-align:center; color:var(--sub); font-size:12px; padding:32px 24px; border-top:1px solid var(--line); }
+  footer { text-align:center; color:var(--sub); font-size:12px; padding:36px 24px; border-top:1px solid var(--line); }
 </style>
 </head>
 <body>
 <header>
-  <h1>生成AIポートフォリオ — 画像制作サンプル</h1>
+  <h1>生成AIポートフォリオ — AI漫画・キャラクター・SNS画像制作</h1>
   <p>ローカル生成・全て商用利用可ライセンス・透かしなし</p>
-  <p>使用モデル：FLUX.1 schnell（写真リアル） / Animagine XL 3.1（アニメ・イラスト）</p>
+  <p>使用モデル：Animagine XL 3.1（アニメ・漫画）／ FLUX.1 schnell（写真リアル）</p>
   <div class="pitch">
     <strong>制作の強み</strong>
     <ul>
-      <li>写真リアル〜アニメ〜占いイラストまで <b>1環境で幅広く生成</b>（モデル切替）</li>
-      <li><b>プロンプト設計集（31本）＋バッチ自動化スクリプト</b>を保有 → 量産案件で速度優位</li>
+      <li><b>キャラクターの一貫性</b>を保った生成（同一キャラの表情・ポーズ差分／LoRA不使用・プロンプト設計＋シード管理）</li>
+      <li>AI生成 → <b>吹き出し配置 → セリフ・オノマトペの文字入れ</b>まで一貫制作（完成漫画ページとして納品可）</li>
+      <li>SNS・YouTubeサムネ・Pinterestピンなど<b>各アスペクト比＋テキスト入り</b>の即用素材に対応</li>
+      <li>写真リアル〜アニメ〜占いイラストまで <b>1環境で幅広く生成</b>。バッチ自動化で<b>量産</b>に強い</li>
       <li>全て <b>商用可ライセンス・透かしなし</b>で、クライアントが安心して使えます</li>
     </ul>
   </div>
@@ -46,8 +59,52 @@
 
 <main>
   <section>
-    <h2>写真リアル系（EC・広告・ビジネス向け）</h2>
-    <p class="note">FLUX.1 schnell で生成。商品写真・ビジネス素材・記事ヘッダー等。</p>
+    <h2>AI漫画・キャラクター制作<span class="badge">一貫性デモ</span></h2>
+    <p class="note">YouTube漫画・継続漫画案件向け。「同じキャラを保てるか」「文字入れまで仕上げられるか」を実物で確認いただけます。</p>
+    <div class="feature">
+      <div class="fcard">
+        <img src="strategic/strategic_expr_sheet.png" alt="キャラクター一貫性 表情差分シート">
+        <div class="meta">
+          <h3>キャラクター一貫性 — 表情差分</h3>
+          <p>同一キャラクターで喜・驚・哀・怒を生成。髪型・リボン・瞳の色・衣装を保ったまま表情のみ変化。</p>
+          <p class="pipe">技法：固定プロンプト設計＋シード管理（LoRA不使用）</p>
+        </div>
+      </div>
+      <div class="fcard">
+        <img src="strategic/strategic_manga_page.png" alt="完成漫画ページ">
+        <div class="meta">
+          <h3>完成漫画ページ（3コマ）</h3>
+          <p>上の同一キャラで「困惑→決意→成功」を構成。吹き出し・セリフ・オノマトペまで文字入れ済み。</p>
+          <p class="pipe">工程：AI生成 → コマ割り → 吹き出し配置 → 文字入れ</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>SNS・サムネイル素材<span class="badge">テキスト入り</span></h2>
+    <p class="note">X／Instagram／Pinterest／YouTube向け。指定の縦横比で、タイトル文字まで入れた即用素材を制作します。</p>
+    <div class="feature">
+      <div class="fcard">
+        <img src="strategic/strategic_pinterest_pin.png" alt="Pinterest縦型ピン">
+        <div class="meta">
+          <h3>Pinterest 縦型ピン（2:3）</h3>
+          <p>背景生成＋見出し・タグ配置。保存されやすい余白設計のピン。</p>
+        </div>
+      </div>
+      <div class="fcard">
+        <img src="strategic/strategic_youtube_thumb.png" alt="YouTubeサムネイル">
+        <div class="meta">
+          <h3>YouTube サムネイル（16:9）</h3>
+          <p>キャラ＋大タイトル＋アクセント。視認性重視の高コントラスト構成。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>対応ジャンル：写真リアル系</h2>
+    <p class="note">FLUX.1 schnell で生成。EC商品写真・ビジネス素材・記事ヘッダー等。</p>
     <div class="grid">
       <div class="card"><img src="samples/product_03_smoothie_00001_.png" alt=""><div class="meta"><h3>グリーンスムージー</h3><p>フード/健康EC・SNS広告</p><span class="tag">Product</span></div></div>
       <div class="card"><img src="samples/product_01_cosmetics_serum_00001_.png" alt=""><div class="meta"><h3>コスメ美容液 商品写真</h3><p>EC商品画像・美容広告</p><span class="tag">Product</span></div></div>
@@ -60,7 +117,7 @@
   </section>
 
   <section>
-    <h2>アニメ・イラスト系（VTuber・ゲーム・占い向け）</h2>
+    <h2>対応ジャンル：アニメ・イラスト系</h2>
     <p class="note">Animagine XL 3.1 で生成。キャラクター立ち絵・カードイラスト・占い素材等。</p>
     <div class="grid">
       <div class="card"><img src="samples/anime_04_mage_fantasy_00001_.png" alt=""><div class="meta"><h3>魔法少女・SSRカード風</h3><p>ソシャゲ風カード・イラスト依頼</p><span class="tag">Anime</span></div></div>
@@ -75,8 +132,8 @@
 </main>
 
 <footer>
-  全14点 ／ ローカル生成 ／ 商用利用可ライセンス・透かしなし<br>
-  写真リアル〜アニメ・イラストまで対応。サンプル追加・量産のご相談はクラウドワークスより承ります。
+  ローカル生成 ／ 商用利用可ライセンス・透かしなし ／ AI漫画・キャラクター・SNS画像制作<br>
+  サンプル追加・キャラクター指定・量産のご相談はクラウドワークスより承ります。
 </footer>
 </body>
 </html>
