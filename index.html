@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生成AIポートフォリオ — 画像制作サンプル</title>
+<style>
+  :root { --bg:#0f1115; --card:#1a1d24; --fg:#e8eaed; --sub:#9aa0aa; --accent:#7c9eff; --line:#2a2e37; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font-family:"Segoe UI","Hiragino Kaku Gothic ProN","Meiryo",sans-serif; line-height:1.6; }
+  header { padding:48px 24px 24px; text-align:center; border-bottom:1px solid var(--line); }
+  header h1 { margin:0 0 8px; font-size:28px; }
+  header p { margin:4px 0; color:var(--sub); font-size:14px; }
+  .pitch { max-width:880px; margin:24px auto 0; text-align:left; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px 22px; }
+  .pitch ul { margin:8px 0 0; padding-left:20px; }
+  .pitch li { margin:4px 0; color:var(--fg); font-size:14px; }
+  main { max-width:1200px; margin:0 auto; padding:24px; }
+  section { margin:36px 0; }
+  section h2 { font-size:20px; border-left:4px solid var(--accent); padding-left:12px; }
+  section .note { color:var(--sub); font-size:13px; margin:4px 0 18px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:18px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; transition:transform .15s ease, border-color .15s ease; }
+  .card:hover { transform:translateY(-3px); border-color:var(--accent); }
+  .card img { width:100%; display:block; background:#222; aspect-ratio:1/1; object-fit:cover; }
+  .card .meta { padding:12px 14px; }
+  .card .meta h3 { margin:0 0 4px; font-size:15px; }
+  .card .meta p { margin:0; font-size:12px; color:var(--sub); }
+  .tag { display:inline-block; font-size:11px; color:var(--accent); border:1px solid var(--accent); border-radius:6px; padding:1px 7px; margin-top:6px; }
+  footer { text-align:center; color:var(--sub); font-size:12px; padding:32px 24px; border-top:1px solid var(--line); }
+</style>
+</head>
+<body>
+<header>
+  <h1>生成AIポートフォリオ — 画像制作サンプル</h1>
+  <p>ローカル生成・全て商用利用可ライセンス・透かしなし</p>
+  <p>使用モデル：FLUX.1 schnell（写真リアル） / Animagine XL 3.1（アニメ・イラスト）</p>
+  <div class="pitch">
+    <strong>制作の強み</strong>
+    <ul>
+      <li>写真リアル〜アニメ〜占いイラストまで <b>1環境で幅広く生成</b>（モデル切替）</li>
+      <li><b>プロンプト設計集（31本）＋バッチ自動化スクリプト</b>を保有 → 量産案件で速度優位</li>
+      <li>全て <b>商用可ライセンス・透かしなし</b>で、クライアントが安心して使えます</li>
+    </ul>
+  </div>
+</header>
+
+<main>
+  <section>
+    <h2>写真リアル系（EC・広告・ビジネス向け）</h2>
+    <p class="note">FLUX.1 schnell で生成。商品写真・ビジネス素材・記事ヘッダー等。</p>
+    <div class="grid">
+      <div class="card"><img src="samples/product_03_smoothie_00001_.png" alt=""><div class="meta"><h3>グリーンスムージー</h3><p>フード/健康EC・SNS広告</p><span class="tag">Product</span></div></div>
+      <div class="card"><img src="samples/product_01_cosmetics_serum_00001_.png" alt=""><div class="meta"><h3>コスメ美容液 商品写真</h3><p>EC商品画像・美容広告</p><span class="tag">Product</span></div></div>
+      <div class="card"><img src="samples/product_05_supplement_00001_.png" alt=""><div class="meta"><h3>サプリメント ライフスタイル</h3><p>健康食品EC・LP</p><span class="tag">Product</span></div></div>
+      <div class="card"><img src="samples/business_02_team_meeting_00001_.png" alt=""><div class="meta"><h3>チームミーティング</h3><p>採用LP・企業ブログ</p><span class="tag">Business</span></div></div>
+      <div class="card"><img src="samples/business_03_profile_woman_00001_.png" alt=""><div class="meta"><h3>女性プロフィール写真</h3><p>著者欄・メディア・LinkedIn</p><span class="tag">Business</span></div></div>
+      <div class="card"><img src="samples/business_01_presenter_00001_.png" alt=""><div class="meta"><h3>ビジネスプレゼン</h3><p>セミナー・研修・IR記事</p><span class="tag">Business</span></div></div>
+      <div class="card"><img src="samples/business_06_digital_tech_00001_.png" alt=""><div class="meta"><h3>IT/データ抽象（テキスト枠付き）</h3><p>記事ヘッダー・バナー下地</p><span class="tag">Business</span></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>アニメ・イラスト系（VTuber・ゲーム・占い向け）</h2>
+    <p class="note">Animagine XL 3.1 で生成。キャラクター立ち絵・カードイラスト・占い素材等。</p>
+    <div class="grid">
+      <div class="card"><img src="samples/anime_04_mage_fantasy_00001_.png" alt=""><div class="meta"><h3>魔法少女・SSRカード風</h3><p>ソシャゲ風カード・イラスト依頼</p><span class="tag">Anime</span></div></div>
+      <div class="card"><img src="samples/anime_02_cool_vtuber_00001_.png" alt=""><div class="meta"><h3>クールVTuber・SF戦闘服</h3><p>VTuber・ゲーム・MV素材</p><span class="tag">Anime</span></div></div>
+      <div class="card"><img src="samples/anime_01_vtuber_00001_.png" alt=""><div class="meta"><h3>元気系VTuber 立ち絵</h3><p>VTuber素材・ゲームキャラ</p><span class="tag">Anime</span></div></div>
+      <div class="card"><img src="samples/anime_03_mascot_chibi_00001_.png" alt=""><div class="meta"><h3>マスコットチビ</h3><p>LINEスタンプ・SNSアイコン</p><span class="tag">Anime</span></div></div>
+      <div class="card"><img src="samples/spiritual_01_tarot_star_00001_.png" alt=""><div class="meta"><h3>タロット「星」風・金枠</h3><p>占い系YouTube/SNS・タロット</p><span class="tag">Spiritual</span></div></div>
+      <div class="card"><img src="samples/spiritual_02_zodiac_goddess_00001_.png" alt=""><div class="meta"><h3>星座女神</h3><p>スピ系・占いコンテンツ</p><span class="tag">Spiritual</span></div></div>
+      <div class="card"><img src="samples/spiritual_03_chakra_00001_.png" alt=""><div class="meta"><h3>チャクラ図解・7色</h3><p>ヒーリング・スピ系解説</p><span class="tag">Spiritual</span></div></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  全14点 ／ ローカル生成 ／ 商用利用可ライセンス・透かしなし<br>
+  写真リアル〜アニメ・イラストまで対応。サンプル追加・量産のご相談はクラウドワークスより承ります。
+</footer>
+</body>
+</html>
