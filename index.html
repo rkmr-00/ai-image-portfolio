@@ -4,164 +4,408 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>生成AIポートフォリオ — AI漫画・キャラクター・SNS画像制作</title>
+<meta name="description" content="ローカル生成・商用利用可・透かしなしのAI画像ポートフォリオ。AI漫画／キャラクター一貫性／YouTubeサムネ／SNS素材／EC商品写真まで一環境で量産対応。">
+<meta property="og:title" content="生成AIポートフォリオ — AI漫画・キャラクター・SNS画像制作">
+<meta property="og:description" content="キャラクター一貫性・文字入れまで一貫制作。商用可・透かしなし。">
+<meta property="og:type" content="website">
+<!-- UIは DESIGN.md（同梱）に準拠 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-  :root { --bg:#0f1115; --card:#1a1d24; --fg:#e8eaed; --sub:#9aa0aa; --accent:#7c9eff; --gold:#ffce6b; --line:#2a2e37; }
-  * { box-sizing: border-box; }
-  body { margin:0; background:var(--bg); color:var(--fg); font-family:"Segoe UI","Hiragino Kaku Gothic ProN","Meiryo",sans-serif; line-height:1.7; }
-  header { padding:52px 24px 28px; text-align:center; border-bottom:1px solid var(--line); }
-  header h1 { margin:0 0 10px; font-size:30px; }
-  header p { margin:4px 0; color:var(--sub); font-size:14px; }
-  .pitch { max-width:920px; margin:24px auto 0; text-align:left; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px 22px; }
-  .pitch ul { margin:8px 0 0; padding-left:20px; }
-  .pitch li { margin:5px 0; color:var(--fg); font-size:14px; }
-  .pitch b { color:var(--gold); }
-  main { max-width:1200px; margin:0 auto; padding:24px; }
-  section { margin:46px 0; }
-  section h2 { font-size:21px; border-left:4px solid var(--accent); padding-left:12px; }
-  section h2 .badge { font-size:12px; color:#0f1115; background:var(--gold); border-radius:6px; padding:2px 8px; margin-left:10px; vertical-align:middle; }
-  section .note { color:var(--sub); font-size:13px; margin:4px 0 18px; }
-  /* feature (large) layout */
-  .feature { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:22px; }
-  .fcard { background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden; }
-  .fcard img { width:100%; display:block; background:#222; }
-  .fcard .meta { padding:16px 18px; }
-  .fcard .meta h3 { margin:0 0 6px; font-size:16px; }
-  .fcard .meta p { margin:0; font-size:13px; color:var(--sub); }
-  .fcard .meta .pipe { margin-top:10px; font-size:12px; color:var(--accent); }
+  :root{
+    /* === DESIGN.md tokens === */
+    --bg:#0b0d12; --surface:#14171f; --surface2:#1b1f29;
+    --fg:#eef0f4; --muted:#9aa3b2;
+    --accent:#8aa2ff; --accent-ink:#0b0d12;
+    --gold:#ffcf6b; --gold-ink:#1a1305;
+    --line:#262b36; --good:#5fd0a0;
+    --r-sm:8px; --r-md:12px; --r-lg:18px; --r-pill:999px;
+    --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:72px;
+    --maxw:1200px;
+    --font-display:'Outfit','Zen Kaku Gothic New',sans-serif;
+    --font-body:'Zen Kaku Gothic New',sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font-family:var(--font-body); font-size:14px; line-height:1.75;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  a{color:var(--accent); text-decoration:none;}
+  img{max-width:100%;}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:4px;}
+
+  /* ---- header / nav ---- */
+  .nav{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:var(--s4); padding:14px clamp(16px,4vw,32px);
+    background:rgba(11,13,18,.72); backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-weight:700; letter-spacing:-.01em;}
+  .brand .dot{width:11px; height:11px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--gold)); box-shadow:0 0 14px rgba(138,162,255,.6);}
+  .nav-links{display:flex; gap:6px; flex-wrap:wrap;}
+  .nav-links a{
+    color:var(--muted); font-size:13px; padding:7px 12px; border-radius:var(--r-pill);
+    transition:color .15s, background .15s;
+  }
+  .nav-links a:hover{color:var(--fg); background:var(--surface2);}
+  .nav .cta{
+    background:var(--accent); color:var(--accent-ink); font-weight:600; font-size:13px;
+    padding:9px 16px; border-radius:var(--r-pill); white-space:nowrap;
+  }
+  @media(max-width:760px){ .nav-links{display:none;} }
+  @media(max-width:420px){ .nav{padding:12px 14px;} .brand{font-size:14px;} .nav .cta{padding:8px 13px; font-size:12px;} }
+
+  /* ---- hero ---- */
+  .hero{position:relative; overflow:hidden; padding:clamp(56px,9vw,104px) clamp(16px,4vw,32px) var(--s8); text-align:center;}
+  .hero::before{
+    content:""; position:absolute; inset:-40% 0 auto; height:520px; z-index:0;
+    background:
+      radial-gradient(closest-side at 30% 30%, rgba(138,162,255,.20), transparent 70%),
+      radial-gradient(closest-side at 72% 20%, rgba(255,207,107,.13), transparent 70%);
+    filter:blur(8px); pointer-events:none;
+  }
+  .hero-inner{position:relative; z-index:1; max-width:880px; margin:0 auto;}
+  .eyebrow{
+    display:inline-block; font-size:12px; letter-spacing:.04em; color:var(--muted);
+    border:1px solid var(--line); background:var(--surface); padding:6px 14px; border-radius:var(--r-pill); margin-bottom:var(--s5);
+  }
+  .hero h1{
+    font-family:var(--font-display); font-weight:700; letter-spacing:-.02em; line-height:1.2;
+    font-size:clamp(23px,5.4vw,46px); margin:0 0 var(--s4);
+    overflow-wrap:anywhere; word-break:normal;
+  }
+  .hero h1 .grad{background:linear-gradient(120deg,var(--accent),var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .hero .lead{color:var(--muted); font-size:clamp(14px,2.2vw,16px); max-width:620px; margin:0 auto var(--s6);}
+  .hero-actions{display:flex; gap:var(--s3); justify-content:center; flex-wrap:wrap;}
+  .btn{font-family:var(--font-display); font-weight:600; font-size:14px; padding:13px 24px; border-radius:var(--r-pill); border:1px solid transparent; cursor:pointer; transition:transform .15s, background .15s, border-color .15s;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn-primary{background:var(--accent); color:var(--accent-ink);}
+  .btn-ghost{background:transparent; color:var(--fg); border-color:var(--line);}
+  .btn-ghost:hover{background:var(--surface2);}
+  .stats{display:flex; gap:var(--s3); justify-content:center; flex-wrap:wrap; margin-top:var(--s7);}
+  .stat{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:14px 20px; min-width:128px;}
+  .stat b{display:block; font-family:var(--font-display); font-size:24px; color:var(--fg); line-height:1;}
+  .stat span{font-size:12px; color:var(--muted);}
+  .stat b.good{color:var(--good);}
+
+  /* ---- strengths ---- */
+  .strengths{max-width:var(--maxw); margin:0 auto; padding:0 clamp(16px,4vw,32px);}
+  .strength-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:var(--s4);}
+  .strength{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg); padding:20px;}
+  .strength .ic{font-size:20px; margin-bottom:10px;}
+  .strength h3{margin:0 0 6px; font-size:15px;}
+  .strength p{margin:0; color:var(--muted); font-size:13px;}
+  .strength b{color:var(--gold); font-weight:700;}
+
+  /* ---- sections ---- */
+  main{max-width:var(--maxw); margin:0 auto; padding:0 clamp(16px,4vw,32px);}
+  section{margin:var(--s8) 0;}
+  .sec-head h2{font-family:var(--font-display); font-size:clamp(20px,3vw,24px); font-weight:600; letter-spacing:-.01em; margin:0; display:flex; align-items:center; gap:10px;}
+  .sec-head h2::before{content:""; width:4px; height:22px; border-radius:2px; background:linear-gradient(var(--accent),var(--gold));}
+  .badge{font-size:11px; color:var(--gold-ink); background:var(--gold); border-radius:var(--r-sm); padding:2px 10px; font-weight:700;}
+  .sec-head .note{color:var(--muted); font-size:13px; margin:10px 0 var(--s5);}
+
+  /* feature (large demos) */
+  .feature{display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:var(--s5);}
+  .fcard{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg); overflow:hidden; transition:transform .18s, border-color .18s;}
+  .fcard:hover{transform:translateY(-4px); border-color:var(--accent);}
+  .fcard .imgwrap{cursor:zoom-in; position:relative; background:#0e1016;}
+  .fcard img{width:100%; display:block;}
+  .fcard .meta{padding:16px 18px;}
+  .fcard .meta h3{margin:0 0 6px; font-size:16px;}
+  .fcard .meta p{margin:0; font-size:13px; color:var(--muted);}
+  .fcard .meta .pipe{margin-top:10px; font-size:12px; color:var(--accent);}
+
+  /* filter bar */
+  .filters{display:flex; gap:8px; flex-wrap:wrap; margin:0 0 var(--s5);}
+  .filter{font-size:13px; color:var(--muted); background:var(--surface2); border:1px solid var(--line); border-radius:var(--r-pill); padding:7px 16px; cursor:pointer; transition:.15s;}
+  .filter:hover{color:var(--fg);}
+  .filter.active{background:var(--accent); color:var(--accent-ink); border-color:var(--accent); font-weight:600;}
+
   /* grid (samples) */
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:18px; }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; transition:transform .15s ease, border-color .15s ease; }
-  .card:hover { transform:translateY(-3px); border-color:var(--accent); }
-  .card img { width:100%; display:block; background:#222; aspect-ratio:1/1; object-fit:cover; }
-  .card .meta { padding:12px 14px; }
-  .card .meta h3 { margin:0 0 4px; font-size:15px; }
-  .card .meta p { margin:0; font-size:12px; color:var(--sub); }
-  .tag { display:inline-block; font-size:11px; color:var(--accent); border:1px solid var(--accent); border-radius:6px; padding:1px 7px; margin-top:6px; }
-  footer { text-align:center; color:var(--sub); font-size:12px; padding:36px 24px; border-top:1px solid var(--line); }
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:var(--s5);}
+  .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg); overflow:hidden; transition:transform .18s, border-color .18s; }
+  .card:hover{transform:translateY(-4px); border-color:var(--accent);}
+  .card .imgwrap{cursor:zoom-in; position:relative; aspect-ratio:1/1; background:#0e1016;}
+  .card .imgwrap img{width:100%; height:100%; object-fit:cover; display:block;}
+  .card .imgwrap::after{content:"拡大"; position:absolute; right:8px; bottom:8px; font-size:11px; color:var(--fg); background:rgba(11,13,18,.7); border:1px solid var(--line); padding:2px 8px; border-radius:var(--r-pill); opacity:0; transition:opacity .15s;}
+  .card:hover .imgwrap::after{opacity:1;}
+  .card .meta{padding:12px 14px;}
+  .card .meta h3{margin:0 0 4px; font-size:14px;}
+  .card .meta p{margin:0; font-size:12px; color:var(--muted);}
+  .tag{display:inline-block; font-size:11px; color:var(--accent); border:1px solid var(--accent); border-radius:var(--r-pill); padding:1px 9px; margin-top:8px;}
+
+  /* CTA band */
+  .cta-band{max-width:var(--maxw); margin:var(--s8) auto; padding:0 clamp(16px,4vw,32px);}
+  .cta-inner{position:relative; overflow:hidden; background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg); padding:clamp(28px,5vw,48px); text-align:center;}
+  .cta-inner::before{content:""; position:absolute; inset:0; background:radial-gradient(closest-side at 50% 0%, rgba(138,162,255,.16), transparent 70%); pointer-events:none;}
+  .cta-inner h2{position:relative; font-family:var(--font-display); font-size:clamp(20px,3vw,26px); margin:0 0 10px;}
+  .cta-inner p{position:relative; color:var(--muted); margin:0 0 var(--s5);}
+
+  /* reveal animation */
+  .reveal{opacity:0; transform:translateY(16px); transition:opacity .5s ease, transform .5s ease;}
+  .reveal.in{opacity:1; transform:none;}
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    .reveal{opacity:1; transform:none; transition:none;}
+    .btn:hover,.card:hover,.fcard:hover{transform:none;}
+  }
+
+  /* ---- lightbox ---- */
+  .lb{position:fixed; inset:0; z-index:100; display:none; align-items:center; justify-content:center; padding:24px;
+      background:rgba(8,9,13,.92); backdrop-filter:blur(6px);}
+  .lb.open{display:flex;}
+  .lb img{max-width:92vw; max-height:80vh; border-radius:var(--r-md); box-shadow:0 20px 60px rgba(0,0,0,.6);}
+  .lb-cap{position:absolute; bottom:24px; left:0; right:0; text-align:center; color:var(--fg); font-size:13px; padding:0 16px;}
+  .lb-cap span{color:var(--muted);}
+  .lb-btn{position:absolute; background:var(--surface2); color:var(--fg); border:1px solid var(--line); width:46px; height:46px; border-radius:50%; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center;}
+  .lb-btn:hover{background:var(--surface);}
+  .lb-close{top:20px; right:20px;}
+  .lb-prev{left:16px; top:50%; transform:translateY(-50%);}
+  .lb-next{right:16px; top:50%; transform:translateY(-50%);}
+  @media(max-width:600px){ .lb-prev,.lb-next{top:auto; bottom:20px; transform:none;} .lb-prev{left:50%; margin-left:-54px;} .lb-next{right:50%; margin-right:-54px;} }
+
+  footer{text-align:center; color:var(--muted); font-size:12px; padding:var(--s7) 24px; border-top:1px solid var(--line); margin-top:var(--s8);}
+  footer .good{color:var(--good);}
 </style>
 </head>
 <body>
-<header>
-  <h1>生成AIポートフォリオ — AI漫画・キャラクター・SNS画像制作</h1>
-  <p>ローカル生成・全て商用利用可ライセンス・透かしなし</p>
-  <p>使用モデル：Animagine XL 3.1（アニメ・漫画）／ FLUX.1 schnell（写真リアル）</p>
-  <div class="pitch">
-    <strong>制作の強み</strong>
-    <ul>
-      <li><b>キャラクターの一貫性</b>を保った生成（同一キャラの表情・ポーズ差分／LoRA不使用・プロンプト設計＋シード管理）</li>
-      <li>AI生成 → <b>吹き出し配置 → セリフ・オノマトペの文字入れ</b>まで一貫制作（完成漫画ページとして納品可）</li>
-      <li>SNS・YouTubeサムネ・Pinterestピンなど<b>各アスペクト比＋テキスト入り</b>の即用素材に対応</li>
-      <li>写真リアル〜アニメ〜占いイラストまで <b>1環境で幅広く生成</b>。バッチ自動化で<b>量産</b>に強い</li>
-      <li>全て <b>商用可ライセンス・透かしなし</b>で、クライアントが安心して使えます</li>
-    </ul>
+
+<!-- ===== NAV ===== -->
+<nav class="nav">
+  <div class="brand"><span class="dot"></span>AI Image Studio</div>
+  <div class="nav-links">
+    <a href="#manga">AI漫画</a>
+    <a href="#sns">SNS素材</a>
+    <a href="#thumb">サムネ</a>
+    <a href="#photo">写真リアル</a>
+    <a href="#anime">アニメ</a>
+  </div>
+  <a class="cta" href="#contact">制作を相談する</a>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow">ローカル生成 ／ 商用利用可 ／ 透かしなし</span>
+    <h1>AI漫画・キャラクター・SNS画像を<span class="grad">一貫した品質で量産</span>します</h1>
+    <p class="lead">同じキャラを保ったまま表情・ポーズを作り分け、吹き出し・文字入れまで仕上げて納品。写真リアルからアニメ・占いイラストまで、1環境で幅広く対応します。</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#manga">作品を見る</a>
+      <a class="btn btn-ghost" href="#contact">制作を相談する</a>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>14<span style="font-size:14px">点</span></b><span>厳選ギャラリー</span></div>
+      <div class="stat"><b>2</b><span>使用モデル（用途別）</span></div>
+      <div class="stat"><b class="good">商用可</b><span>全点ライセンスクリア</span></div>
+      <div class="stat"><b class="good">透かし<br>なし</b><span>そのまま納品可</span></div>
+    </div>
   </div>
 </header>
 
+<!-- ===== STRENGTHS ===== -->
+<div class="strengths reveal">
+  <div class="strength-grid">
+    <div class="strength"><div class="ic">🎭</div><h3>キャラクターの一貫性</h3><p>同一キャラの表情・ポーズ差分を、髪型・瞳・衣装を保って生成。<b>プロンプト設計＋シード管理</b>で再現。</p></div>
+    <div class="strength"><div class="ic">💬</div><h3>文字入れまで一貫制作</h3><p>AI生成 → コマ割り → <b>吹き出し・セリフ・オノマトペ</b>まで。完成漫画ページとして納品できます。</p></div>
+    <div class="strength"><div class="ic">📐</div><h3>各アスペクト比に対応</h3><p>YouTube／Pinterest／X など、<b>指定比率＋テキスト入り</b>の即用素材を制作します。</p></div>
+    <div class="strength"><div class="ic">⚡</div><h3>量産に強い</h3><p>バッチ自動化で<b>構図・配色・キャッチ違いの複数案</b>をまとめて生成。シリーズ案件に最適。</p></div>
+  </div>
+</div>
+
+<!-- ===== MAIN ===== -->
 <main>
-  <section>
-    <h2>AI漫画・キャラクター制作<span class="badge">一貫性デモ</span></h2>
-    <p class="note">YouTube漫画・継続漫画案件向け。「同じキャラを保てるか」「文字入れまで仕上げられるか」を実物で確認いただけます。</p>
+
+  <section id="manga" class="reveal">
+    <div class="sec-head"><h2>AI漫画・キャラクター制作 <span class="badge">一貫性デモ</span></h2>
+    <p class="note">YouTube漫画・継続漫画案件向け。「同じキャラを保てるか」「文字入れまで仕上げられるか」を実物で確認いただけます。</p></div>
     <div class="feature">
-      <div class="fcard">
-        <img src="strategic/strategic_expr_sheet.png" alt="キャラクター一貫性 表情差分シート">
+      <article class="fcard">
+        <div class="imgwrap"><img loading="lazy" src="strategic/strategic_expr_sheet.png" alt="同一キャラクターの表情差分シート（喜・驚・哀・怒）"></div>
         <div class="meta">
           <h3>キャラクター一貫性 — 表情差分</h3>
           <p>同一キャラクターで喜・驚・哀・怒を生成。髪型・リボン・瞳の色・衣装を保ったまま表情のみ変化。</p>
           <p class="pipe">技法：固定プロンプト設計＋シード管理（LoRA不使用）</p>
         </div>
-      </div>
-      <div class="fcard">
-        <img src="strategic/strategic_manga_page.png" alt="完成漫画ページ">
+      </article>
+      <article class="fcard">
+        <div class="imgwrap"><img loading="lazy" src="strategic/strategic_manga_page.png" alt="完成した3コマ漫画ページ。吹き出し・セリフ入り"></div>
         <div class="meta">
           <h3>完成漫画ページ（3コマ）</h3>
           <p>上の同一キャラで「困惑→決意→成功」を構成。吹き出し・セリフ・オノマトペまで文字入れ済み。</p>
           <p class="pipe">工程：AI生成 → コマ割り → 吹き出し配置 → 文字入れ</p>
         </div>
-      </div>
+      </article>
     </div>
   </section>
 
-  <section>
-    <h2>SNS・サムネイル素材<span class="badge">テキスト入り</span></h2>
-    <p class="note">X／Instagram／Pinterest／YouTube向け。指定の縦横比で、タイトル文字まで入れた即用素材を制作します。</p>
+  <section id="sns" class="reveal">
+    <div class="sec-head"><h2>SNS・サムネイル素材 <span class="badge">テキスト入り</span></h2>
+    <p class="note">X／Instagram／Pinterest／YouTube向け。指定の縦横比で、タイトル文字まで入れた即用素材を制作します。</p></div>
     <div class="feature">
-      <div class="fcard">
-        <img src="strategic/strategic_pinterest_pin.png" alt="Pinterest縦型ピン">
-        <div class="meta">
-          <h3>Pinterest 縦型ピン（2:3）</h3>
-          <p>背景生成＋見出し・タグ配置。保存されやすい余白設計のピン。</p>
-        </div>
-      </div>
-      <div class="fcard">
-        <img src="strategic/strategic_youtube_thumb.png" alt="YouTubeサムネイル">
-        <div class="meta">
-          <h3>YouTube サムネイル（16:9）</h3>
-          <p>キャラ＋大タイトル＋アクセント。視認性重視の高コントラスト構成。</p>
-        </div>
-      </div>
+      <article class="fcard">
+        <div class="imgwrap"><img loading="lazy" src="strategic/strategic_pinterest_pin.png" alt="Pinterest縦型ピン（2:3）見出し・タグ入り"></div>
+        <div class="meta"><h3>Pinterest 縦型ピン（2:3）</h3><p>背景生成＋見出し・タグ配置。保存されやすい余白設計のピン。</p></div>
+      </article>
+      <article class="fcard">
+        <div class="imgwrap"><img loading="lazy" src="strategic/strategic_youtube_thumb.png" alt="YouTubeサムネイル（16:9）大タイトル入り"></div>
+        <div class="meta"><h3>YouTube サムネイル（16:9）</h3><p>キャラ＋大タイトル＋アクセント。視認性重視の高コントラスト構成。</p></div>
+      </article>
     </div>
   </section>
 
-  <section>
-    <h2>YouTube サムネイル制作<span class="badge">ジャンル別</span></h2>
-    <p class="note">ペット・子育て/教育・暮らし系など、チャンネルの系統に合わせて「主役画像をAI生成 → 大タイトル・縁取り・バッジまで文字入れ」した即用サムネ（16:9）。1案件で構図・配色・キャッチ違いの複数案を量産できます。</p>
+  <section id="thumb" class="reveal">
+    <div class="sec-head"><h2>YouTube サムネイル制作 <span class="badge">ジャンル別</span></h2>
+    <p class="note">ペット・子育て/教育・暮らし系など、チャンネルの系統に合わせて「主役画像をAI生成 → 大タイトル・縁取り・バッジまで文字入れ」した即用サムネ（16:9）。1案件で構図・配色・キャッチ違いの複数案を量産できます。</p></div>
     <div class="feature">
-      <div class="fcard">
-        <img src="strategic/thumb_cat_curious.png" alt="ペット系YouTubeサムネイル">
-        <div class="meta">
-          <h3>ペット系サムネ</h3>
-          <p>猫・動物チャンネル向け。主役＋大タイトル＋丸バッジで視認性重視。</p>
-        </div>
-      </div>
-      <div class="fcard">
-        <img src="strategic/thumb_parenting_study.png" alt="子育て・教育系YouTubeサムネイル">
-        <div class="meta">
-          <h3>子育て・教育系サムネ</h3>
-          <p>子育て/学び系チャンネル向け。あたたかい配色＋数字入りキャッチ。</p>
-        </div>
-      </div>
-      <div class="fcard">
-        <img src="strategic/thumb_lifestyle_tips.png" alt="暮らし・豆知識系YouTubeサムネイル">
-        <div class="meta">
-          <h3>暮らし・豆知識系サムネ</h3>
-          <p>解説・ライフハック系向け。高コントラスト＋「保存版」バッジ。</p>
-        </div>
-      </div>
+      <article class="fcard">
+        <div class="imgwrap"><img loading="lazy" src="strategic/thumb_cat_curious.png" alt="ペット系YouTubeサムネイル"></div>
+        <div class="meta"><h3>ペット系サムネ</h3><p>猫・動物チャンネル向け。主役＋大タイトル＋丸バッジで視認性重視。</p></div>
+      </article>
+      <article class="fcard">
+        <div class="imgwrap"><img loading="lazy" src="strategic/thumb_parenting_study.png" alt="子育て・教育系YouTubeサムネイル"></div>
+        <div class="meta"><h3>子育て・教育系サムネ</h3><p>子育て/学び系チャンネル向け。あたたかい配色＋数字入りキャッチ。</p></div>
+      </article>
+      <article class="fcard">
+        <div class="imgwrap"><img loading="lazy" src="strategic/thumb_lifestyle_tips.png" alt="暮らし・豆知識系YouTubeサムネイル"></div>
+        <div class="meta"><h3>暮らし・豆知識系サムネ</h3><p>解説・ライフハック系向け。高コントラスト＋「保存版」バッジ。</p></div>
+      </article>
     </div>
   </section>
 
-  <section>
-    <h2>対応ジャンル：写真リアル系</h2>
-    <p class="note">FLUX.1 schnell で生成。EC商品写真・ビジネス素材・記事ヘッダー等。</p>
-    <div class="grid">
-      <div class="card"><img src="samples/product_03_smoothie_00001_.png" alt=""><div class="meta"><h3>グリーンスムージー</h3><p>フード/健康EC・SNS広告</p><span class="tag">Product</span></div></div>
-      <div class="card"><img src="samples/product_01_cosmetics_serum_00001_.png" alt=""><div class="meta"><h3>コスメ美容液 商品写真</h3><p>EC商品画像・美容広告</p><span class="tag">Product</span></div></div>
-      <div class="card"><img src="samples/product_05_supplement_00001_.png" alt=""><div class="meta"><h3>サプリメント ライフスタイル</h3><p>健康食品EC・LP</p><span class="tag">Product</span></div></div>
-      <div class="card"><img src="samples/business_02_team_meeting_00001_.png" alt=""><div class="meta"><h3>チームミーティング</h3><p>採用LP・企業ブログ</p><span class="tag">Business</span></div></div>
-      <div class="card"><img src="samples/business_03_profile_woman_00001_.png" alt=""><div class="meta"><h3>女性プロフィール写真</h3><p>著者欄・メディア・LinkedIn</p><span class="tag">Business</span></div></div>
-      <div class="card"><img src="samples/business_01_presenter_00001_.png" alt=""><div class="meta"><h3>ビジネスプレゼン</h3><p>セミナー・研修・IR記事</p><span class="tag">Business</span></div></div>
-      <div class="card"><img src="samples/business_06_digital_tech_00001_.png" alt=""><div class="meta"><h3>IT/データ抽象（テキスト枠付き）</h3><p>記事ヘッダー・バナー下地</p><span class="tag">Business</span></div></div>
+  <section id="gallery" class="reveal">
+    <div class="sec-head"><h2>対応ジャンル ギャラリー</h2>
+    <p class="note">写真リアル（FLUX.1 schnell）／ アニメ・イラスト（Animagine XL 3.1）。タブで絞り込み、画像クリックで拡大できます。</p></div>
+    <div class="filters" id="filters">
+      <button class="filter active" data-cat="all">すべて</button>
+      <button class="filter" data-cat="Product">商品・EC</button>
+      <button class="filter" data-cat="Business">ビジネス</button>
+      <button class="filter" data-cat="Anime">アニメ</button>
+      <button class="filter" data-cat="Spiritual">占い・スピ</button>
     </div>
-  </section>
-
-  <section>
-    <h2>対応ジャンル：アニメ・イラスト系</h2>
-    <p class="note">Animagine XL 3.1 で生成。キャラクター立ち絵・カードイラスト・占い素材等。</p>
-    <div class="grid">
-      <div class="card"><img src="samples/anime_04_mage_fantasy_00001_.png" alt=""><div class="meta"><h3>魔法少女・SSRカード風</h3><p>ソシャゲ風カード・イラスト依頼</p><span class="tag">Anime</span></div></div>
-      <div class="card"><img src="samples/anime_02_cool_vtuber_00001_.png" alt=""><div class="meta"><h3>クールVTuber・SF戦闘服</h3><p>VTuber・ゲーム・MV素材</p><span class="tag">Anime</span></div></div>
-      <div class="card"><img src="samples/anime_01_vtuber_00001_.png" alt=""><div class="meta"><h3>元気系VTuber 立ち絵</h3><p>VTuber素材・ゲームキャラ</p><span class="tag">Anime</span></div></div>
-      <div class="card"><img src="samples/anime_03_mascot_chibi_00001_.png" alt=""><div class="meta"><h3>マスコットチビ</h3><p>LINEスタンプ・SNSアイコン</p><span class="tag">Anime</span></div></div>
-      <div class="card"><img src="samples/spiritual_01_tarot_star_00001_.png" alt=""><div class="meta"><h3>タロット「星」風・金枠</h3><p>占い系YouTube/SNS・タロット</p><span class="tag">Spiritual</span></div></div>
-      <div class="card"><img src="samples/spiritual_02_zodiac_goddess_00001_.png" alt=""><div class="meta"><h3>星座女神</h3><p>スピ系・占いコンテンツ</p><span class="tag">Spiritual</span></div></div>
-      <div class="card"><img src="samples/spiritual_03_chakra_00001_.png" alt=""><div class="meta"><h3>チャクラ図解・7色</h3><p>ヒーリング・スピ系解説</p><span class="tag">Spiritual</span></div></div>
+    <div class="grid" id="gallery-grid">
+      <div class="card" data-cat="Product"><div class="imgwrap"><img loading="lazy" src="samples/product_03_smoothie_00001_.png" alt="グリーンスムージーの商品写真"></div><div class="meta"><h3>グリーンスムージー</h3><p>フード/健康EC・SNS広告</p><span class="tag">Product</span></div></div>
+      <div class="card" data-cat="Product"><div class="imgwrap"><img loading="lazy" src="samples/product_01_cosmetics_serum_00001_.png" alt="コスメ美容液の商品写真"></div><div class="meta"><h3>コスメ美容液 商品写真</h3><p>EC商品画像・美容広告</p><span class="tag">Product</span></div></div>
+      <div class="card" data-cat="Product"><div class="imgwrap"><img loading="lazy" src="samples/product_05_supplement_00001_.png" alt="サプリメントのライフスタイル写真"></div><div class="meta"><h3>サプリメント ライフスタイル</h3><p>健康食品EC・LP</p><span class="tag">Product</span></div></div>
+      <div class="card" data-cat="Business"><div class="imgwrap"><img loading="lazy" src="samples/business_02_team_meeting_00001_.png" alt="チームミーティングのビジネス写真"></div><div class="meta"><h3>チームミーティング</h3><p>採用LP・企業ブログ</p><span class="tag">Business</span></div></div>
+      <div class="card" data-cat="Business"><div class="imgwrap"><img loading="lazy" src="samples/business_03_profile_woman_00001_.png" alt="女性のプロフィール写真"></div><div class="meta"><h3>女性プロフィール写真</h3><p>著者欄・メディア・LinkedIn</p><span class="tag">Business</span></div></div>
+      <div class="card" data-cat="Business"><div class="imgwrap"><img loading="lazy" src="samples/business_01_presenter_00001_.png" alt="ビジネスプレゼンの男性写真"></div><div class="meta"><h3>ビジネスプレゼン</h3><p>セミナー・研修・IR記事</p><span class="tag">Business</span></div></div>
+      <div class="card" data-cat="Business"><div class="imgwrap"><img loading="lazy" src="samples/business_06_digital_tech_00001_.png" alt="IT・データの抽象ビジュアル（テキスト枠付き）"></div><div class="meta"><h3>IT/データ抽象（テキスト枠付き）</h3><p>記事ヘッダー・バナー下地</p><span class="tag">Business</span></div></div>
+      <div class="card" data-cat="Anime"><div class="imgwrap"><img loading="lazy" src="samples/anime_04_mage_fantasy_00001_.png" alt="魔法少女のSSRカード風イラスト"></div><div class="meta"><h3>魔法少女・SSRカード風</h3><p>ソシャゲ風カード・イラスト依頼</p><span class="tag">Anime</span></div></div>
+      <div class="card" data-cat="Anime"><div class="imgwrap"><img loading="lazy" src="samples/anime_02_cool_vtuber_00001_.png" alt="クールなVTuberのSF戦闘服立ち絵"></div><div class="meta"><h3>クールVTuber・SF戦闘服</h3><p>VTuber・ゲーム・MV素材</p><span class="tag">Anime</span></div></div>
+      <div class="card" data-cat="Anime"><div class="imgwrap"><img loading="lazy" src="samples/anime_01_vtuber_00001_.png" alt="元気系VTuberの立ち絵"></div><div class="meta"><h3>元気系VTuber 立ち絵</h3><p>VTuber素材・ゲームキャラ</p><span class="tag">Anime</span></div></div>
+      <div class="card" data-cat="Anime"><div class="imgwrap"><img loading="lazy" src="samples/anime_03_mascot_chibi_00001_.png" alt="マスコットのチビキャラ"></div><div class="meta"><h3>マスコットチビ</h3><p>LINEスタンプ・SNSアイコン</p><span class="tag">Anime</span></div></div>
+      <div class="card" data-cat="Spiritual"><div class="imgwrap"><img loading="lazy" src="samples/spiritual_01_tarot_star_00001_.png" alt="タロット「星」風の金枠イラスト"></div><div class="meta"><h3>タロット「星」風・金枠</h3><p>占い系YouTube/SNS・タロット</p><span class="tag">Spiritual</span></div></div>
+      <div class="card" data-cat="Spiritual"><div class="imgwrap"><img loading="lazy" src="samples/spiritual_02_zodiac_goddess_00001_.png" alt="星座の女神イラスト"></div><div class="meta"><h3>星座女神</h3><p>スピ系・占いコンテンツ</p><span class="tag">Spiritual</span></div></div>
+      <div class="card" data-cat="Spiritual"><div class="imgwrap"><img loading="lazy" src="samples/spiritual_03_chakra_00001_.png" alt="7色のチャクラ図解イラスト"></div><div class="meta"><h3>チャクラ図解・7色</h3><p>ヒーリング・スピ系解説</p><span class="tag">Spiritual</span></div></div>
     </div>
   </section>
 </main>
 
+<!-- ===== CTA ===== -->
+<div class="cta-band reveal" id="contact">
+  <div class="cta-inner">
+    <h2>キャラ指定・量産のご相談を承ります</h2>
+    <p>サンプル追加・特定キャラの作り込み・シリーズ量産まで対応します。クラウドワークスよりお気軽にどうぞ。</p>
+    <a class="btn btn-primary" href="https://crowdworks.jp/" target="_blank" rel="noopener">クラウドワークスで相談する</a>
+  </div>
+</div>
+
 <footer>
-  ローカル生成 ／ 商用利用可ライセンス・透かしなし ／ AI漫画・キャラクター・SNS画像制作<br>
-  サンプル追加・キャラクター指定・量産のご相談はクラウドワークスより承ります。
+  ローカル生成 ／ <span class="good">商用利用可ライセンス・透かしなし</span> ／ AI漫画・キャラクター・SNS画像制作<br>
+  使用モデル：Animagine XL 3.1（アニメ・漫画）／ FLUX.1 schnell（写真リアル）<br>
+  <span style="opacity:.7">UI is built to spec — see DESIGN.md in this repo.</span>
 </footer>
+
+<!-- ===== LIGHTBOX ===== -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="作品の拡大表示">
+  <button class="lb-btn lb-close" id="lb-close" aria-label="閉じる">×</button>
+  <button class="lb-btn lb-prev" id="lb-prev" aria-label="前へ">‹</button>
+  <img id="lb-img" src="" alt="">
+  <button class="lb-btn lb-next" id="lb-next" aria-label="次へ">›</button>
+  <div class="lb-cap" id="lb-cap"></div>
+</div>
+
+<script>
+(function(){
+  /* ---- scroll reveal ---- */
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  }, {threshold:.12});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  /* ---- category filter ---- */
+  var filters = document.querySelectorAll('.filter');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('#gallery-grid .card'));
+  filters.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      filters.forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var cat = btn.dataset.cat;
+      cards.forEach(function(c){
+        c.style.display = (cat==='all' || c.dataset.cat===cat) ? '' : 'none';
+      });
+      rebuildLightboxList();
+    });
+  });
+
+  /* ---- lightbox ---- */
+  var lb = document.getElementById('lb'),
+      lbImg = document.getElementById('lb-img'),
+      lbCap = document.getElementById('lb-cap');
+  var items = [], idx = 0;
+
+  function collect(){
+    // all visible zoomable images, in DOM order
+    return Array.prototype.slice.call(document.querySelectorAll('.imgwrap'))
+      .filter(function(w){ return w.offsetParent !== null; })
+      .map(function(w){
+        var img = w.querySelector('img');
+        var meta = w.parentElement.querySelector('.meta h3');
+        return {src:img.getAttribute('src'), alt:img.getAttribute('alt'), title:meta?meta.textContent:''};
+      });
+  }
+  function rebuildLightboxList(){ items = collect(); }
+
+  function open(i){
+    items = collect(); idx = i;
+    show();
+    lb.classList.add('open');
+    document.body.style.overflow='hidden';
+    document.getElementById('lb-close').focus();
+  }
+  function show(){
+    var it = items[idx]; if(!it) return;
+    lbImg.src = it.src; lbImg.alt = it.alt;
+    lbCap.innerHTML = '<b>'+it.title+'</b> &nbsp;<span>'+(idx+1)+' / '+items.length+'</span>';
+  }
+  function close(){ lb.classList.remove('open'); document.body.style.overflow=''; }
+  function move(d){ idx = (idx + d + items.length) % items.length; show(); }
+
+  document.querySelectorAll('.imgwrap').forEach(function(w){
+    w.addEventListener('click', function(){
+      var list = collect();
+      var src = w.querySelector('img').getAttribute('src');
+      var i = list.findIndex(function(x){ return x.src===src; });
+      open(i<0?0:i);
+    });
+  });
+  document.getElementById('lb-close').addEventListener('click', close);
+  document.getElementById('lb-prev').addEventListener('click', function(e){ e.stopPropagation(); move(-1); });
+  document.getElementById('lb-next').addEventListener('click', function(e){ e.stopPropagation(); move(1); });
+  lb.addEventListener('click', function(e){ if(e.target===lb) close(); });
+  document.addEventListener('keydown', function(e){
+    if(!lb.classList.contains('open')) return;
+    if(e.key==='Escape') close();
+    else if(e.key==='ArrowLeft') move(-1);
+    else if(e.key==='ArrowRight') move(1);
+  });
+})();
+</script>
 </body>
 </html>
